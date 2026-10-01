@@ -66,8 +66,6 @@ export const ProductDetail: React.FC = () => {
               <Product3DViewer
                 product={selectedProduct}
                 selectedColor={selectedColor}
-                isBoxOpen={isBoxOpen}
-                onToggleBox={() => setIsBoxOpen(!isBoxOpen)}
               />
             </div>
 
@@ -111,8 +109,6 @@ export const ProductDetail: React.FC = () => {
                 onSelectProduct={handleSelectProduct}
                 selectedColor={selectedColor}
                 onSelectColor={setSelectedColor}
-                isBoxOpen={isBoxOpen}
-                onToggleBox={() => setIsBoxOpen(!isBoxOpen)}
               />
 
               {/* Purchase Action Buttons */}

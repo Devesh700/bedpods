@@ -118,61 +118,55 @@ function createHumanHand() {
   return handGroup;
 }
 
-// 1. ALFA GOLD BOX CLASSIC (Loom Lift-Off Rigid Telescopic Jewellery Box)
+// 1. ALFA GOLD BOX CLASSIC (Solid Cuboid Jewellery Box matching image.png)
 function createAlfaGoldClassicBox() {
   const group = new THREE.Group();
   group.name = "AlfaGoldClassicBox";
 
-  // --- 1. BOTTOM BASE & INNER GOLD COLLAR GROUP ---
-  const baseGroup = new THREE.Group();
-
-  // Bottom Base Outer Container (y = -0.7 to 0)
-  const baseGeo = new THREE.BoxGeometry(2.0, 0.7, 2.0);
-  const baseMat = new THREE.MeshStandardMaterial({
-    color: 0x334155, // Silver-slate matte finish
+  const bodyMat = new THREE.MeshStandardMaterial({
+    color: 0x5b6e7c, // Slate silver / grey exterior
     roughness: 0.35,
     metalness: 0.25,
   });
-  const baseMesh = new THREE.Mesh(baseGeo, baseMat);
-  baseMesh.position.y = -0.35;
-  baseMesh.name = "BoxBaseOuter";
-  baseGroup.add(baseMesh);
 
-  // Inner Golden Tray Collar (Sticks UP above base rim by 0.35, exposed when lid lifts!)
-  const goldCollarGeo = new THREE.BoxGeometry(1.93, 0.6, 1.93);
-  const goldCollarMat = new THREE.MeshStandardMaterial({
-    color: 0xf59e0b, // Pure Gold collar
-    metalness: 0.95,
-    roughness: 0.15,
-  });
-  const goldCollarMesh = new THREE.Mesh(goldCollarGeo, goldCollarMat);
-  goldCollarMesh.position.y = 0.18;
-  goldCollarMesh.name = "GoldCollar";
-  baseGroup.add(goldCollarMesh);
+  // --- 1. LOWER CUBOID BASE CONTAINER ---
+  const baseGroup = new THREE.Group();
+  baseGroup.name = "BoxBaseGroup";
 
-  // Black Microfiber Velvet Cushion Insert
-  const cushionGeo = new THREE.BoxGeometry(1.85, 0.45, 1.85);
-  const cushionMat = new THREE.MeshStandardMaterial({
-    color: 0x080c14, // Deep black velvet
+  // Base Bottom Flap / Rim
+  const baseFlapGeo = new THREE.BoxGeometry(2.1, 0.06, 2.1);
+  const baseFlapMesh = new THREE.Mesh(baseFlapGeo, bodyMat);
+  baseFlapMesh.position.y = -0.63;
+  baseFlapMesh.name = "BoxBaseOuter";
+  baseGroup.add(baseFlapMesh);
+
+  // Main Solid Cuboid Base Body (width = 2.0, height = 1.2, depth = 2.0)
+  const baseCubeGeo = new THREE.BoxGeometry(2.0, 1.2, 2.0);
+  const baseCubeMesh = new THREE.Mesh(baseCubeGeo, bodyMat);
+  baseCubeMesh.position.y = 0.0;
+  baseCubeMesh.name = "BoxBaseCube";
+  baseGroup.add(baseCubeMesh);
+
+  // Inner Black Velvet Cushion Insert
+  const velvetGeo = new THREE.BoxGeometry(1.85, 0.35, 1.85);
+  const velvetMat = new THREE.MeshStandardMaterial({
+    color: 0x06080c, // Deep rich black velvet
     roughness: 0.96,
   });
-  const cushionMesh = new THREE.Mesh(cushionGeo, cushionMat);
-  cushionMesh.position.y = 0.22;
-  cushionMesh.name = "VelvetCushion";
-  baseGroup.add(cushionMesh);
+  const velvetMesh = new THREE.Mesh(velvetGeo, velvetMat);
+  velvetMesh.position.y = 0.45; // Sitting on top cavity of base cuboid
+  velvetMesh.name = "VelvetCushion";
+  baseGroup.add(velvetMesh);
 
   // Ring Slot Cutout
-  const slotGeo = new THREE.BoxGeometry(0.8, 0.15, 0.18);
-  const slotMat = new THREE.MeshStandardMaterial({ color: 0x020406, roughness: 0.98 });
+  const slotGeo = new THREE.BoxGeometry(0.75, 0.08, 0.16);
+  const slotMat = new THREE.MeshStandardMaterial({ color: 0x020304, roughness: 0.98 });
   const slotMesh = new THREE.Mesh(slotGeo, slotMat);
-  slotMesh.position.set(0, 0.44, 0);
+  slotMesh.position.set(0, 0.62, 0);
   baseGroup.add(slotMesh);
 
-  // Pure Gold Ring Product Group
-  const productGroup = new THREE.Group();
-  productGroup.name = "ProductRingGroup";
-
-  const ringGeo = new THREE.TorusGeometry(0.32, 0.08, 16, 32);
+  // Pure Gold Ring Product
+  const ringGeo = new THREE.TorusGeometry(0.28, 0.07, 16, 32);
   const ringMat = new THREE.MeshStandardMaterial({
     color: 0xf59e0b,
     metalness: 0.95,
@@ -180,193 +174,174 @@ function createAlfaGoldClassicBox() {
   });
   const ringMesh = new THREE.Mesh(ringGeo, ringMat);
   ringMesh.rotation.x = Math.PI / 2;
-  ringMesh.position.set(0, 0.52, 0);
+  ringMesh.position.set(0, 0.72, 0);
   ringMesh.name = "GoldRingProduct";
-  productGroup.add(ringMesh);
+  baseGroup.add(ringMesh);
 
   // Diamond Gemstone on Ring
-  const gemGeo = new THREE.OctahedronGeometry(0.14, 0);
+  const gemGeo = new THREE.OctahedronGeometry(0.12, 0);
   const gemMat = new THREE.MeshPhysicalMaterial({
     color: 0xffffff,
     roughness: 0.0,
     metalness: 0.1,
     transmission: 0.9,
-    opacity: 1.0,
     transparent: true,
   });
   const gemMesh = new THREE.Mesh(gemGeo, gemMat);
-  gemMesh.position.set(0, 0.72, 0);
-  productGroup.add(gemMesh);
+  gemMesh.position.set(0, 0.9, 0);
+  baseGroup.add(gemMesh);
 
-  baseGroup.add(productGroup);
   group.add(baseGroup);
 
-  // --- 2. TELESCOPIC LIFT-OFF TOP LID COVER GROUP ---
+  // --- 2. HINGED CUBOID TOP LID (Standing open ~115° as in image.png) ---
   const lidGroup = new THREE.Group();
-  lidGroup.position.set(0, 0.0, 0.0);
   lidGroup.name = "LidGroup";
+  // Hinge point at top back edge of base box (y = 0.6, z = -1.0)
+  lidGroup.position.set(0, 0.6, -1.0);
+  lidGroup.rotation.x = Math.PI * 0.6; // Angled backward 115°
 
-  // Top Lid Panel (Cap covering top of golden collar)
-  const lidTopGeo = new THREE.BoxGeometry(2.04, 0.08, 2.04);
-  const lidTopMesh = new THREE.Mesh(lidTopGeo, baseMat);
-  lidTopMesh.position.set(0, 0.46, 0.0);
-  lidTopMesh.name = "LidShell";
-  lidGroup.add(lidTopMesh);
+  // Lid Rectangular Panel
+  const lidPanelGeo = new THREE.BoxGeometry(2.0, 1.8, 0.06);
+  const lidPanelMesh = new THREE.Mesh(lidPanelGeo, bodyMat);
+  lidPanelMesh.position.set(0, 0.9, 0.0);
+  lidPanelMesh.name = "LidShell";
+  lidGroup.add(lidPanelMesh);
 
-  // Front Lip Wall
-  const frontLipGeo = new THREE.BoxGeometry(2.04, 0.42, 0.08);
-  const frontLipMesh = new THREE.Mesh(frontLipGeo, baseMat);
-  frontLipMesh.position.set(0, 0.23, 0.98);
-  frontLipMesh.name = "FrontLip";
-  lidGroup.add(frontLipMesh);
+  // Top Lip Bend (pointing slightly forward as in image.png)
+  const topLipGeo = new THREE.BoxGeometry(2.0, 0.35, 0.06);
+  const topLipMesh = new THREE.Mesh(topLipGeo, bodyMat);
+  topLipMesh.position.set(0, 1.78, 0.1);
+  topLipMesh.rotation.x = Math.PI * 0.16;
+  topLipMesh.name = "LidTopLip";
+  lidGroup.add(topLipMesh);
 
-  // Back Lip Wall
-  const backLipMesh = new THREE.Mesh(frontLipGeo, baseMat);
-  backLipMesh.position.set(0, 0.23, -0.98);
-  backLipMesh.name = "BackLip";
-  lidGroup.add(backLipMesh);
-
-  // Left Lip Wall
-  const sideLipGeo = new THREE.BoxGeometry(0.08, 0.42, 2.04);
-  const leftLipMesh = new THREE.Mesh(sideLipGeo, baseMat);
-  leftLipMesh.position.set(-0.98, 0.23, 0.0);
-  leftLipMesh.name = "LeftLip";
-  lidGroup.add(leftLipMesh);
-
-  // Right Lip Wall
-  const rightLipMesh = new THREE.Mesh(sideLipGeo, baseMat);
-  rightLipMesh.position.set(0.98, 0.23, 0.0);
-  rightLipMesh.name = "RightLip";
-  lidGroup.add(rightLipMesh);
-
-  // ALFA GOLD BOX Logo on TOP OUTSIDE OF LID
-  const logoGeo = new THREE.PlaneGeometry(1.4, 0.65);
+  // Gold Foil Embossed Logo ON INSIDE FACE OF OPEN LID (Facing viewer!)
+  const logoGeo = new THREE.PlaneGeometry(1.3, 0.65);
   const logoMat = new THREE.MeshStandardMaterial({
-    color: 0xd97706, // Gold foil embossing
+    color: 0xf59e0b, // Pure gold foil embossing
     metalness: 0.95,
     roughness: 0.15,
     side: THREE.DoubleSide,
   });
   const logoMesh = new THREE.Mesh(logoGeo, logoMat);
-  logoMesh.rotation.x = -Math.PI / 2; // Face UPWARDS on top of outer lid!
-  logoMesh.position.set(0, 0.505, 0.0);
+  logoMesh.position.set(0, 0.95, 0.035); // Front surface of inside lid panel
   logoMesh.name = "AlfaGoldLogo";
   lidGroup.add(logoMesh);
-
-  // ATTACH HUMAN HAND MODEL TO LID GROUP
-  const humanHand = createHumanHand();
-  lidGroup.add(humanHand);
 
   group.add(lidGroup);
   return group;
 }
 
-// 2. ALFA GOLD BOX DELUXE
+// 2. ALFA GOLD BOX DELUXE (Solid Cuboid Box)
 function createAlfaGoldDeluxeBox() {
   const group = new THREE.Group();
   group.name = "AlfaGoldDeluxeBox";
 
-  const baseGeo = new THREE.BoxGeometry(3.0, 0.7, 2.2);
-  const baseMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.25, metalness: 0.3 });
-  const baseMesh = new THREE.Mesh(baseGeo, baseMat);
-  baseMesh.position.y = -0.35;
-  group.add(baseMesh);
+  const bodyMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3, metalness: 0.3 });
 
-  const goldCollarGeo = new THREE.BoxGeometry(2.93, 0.5, 2.13);
-  const goldCollarMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.95, roughness: 0.15 });
-  const goldCollarMesh = new THREE.Mesh(goldCollarGeo, goldCollarMat);
-  goldCollarMesh.position.y = 0.16;
-  group.add(goldCollarMesh);
+  const baseGroup = new THREE.Group();
+  const baseFlapGeo = new THREE.BoxGeometry(2.8, 0.06, 2.2);
+  const baseFlapMesh = new THREE.Mesh(baseFlapGeo, bodyMat);
+  baseFlapMesh.position.y = -0.63;
+  baseFlapMesh.name = "BoxBaseOuter";
+  baseGroup.add(baseFlapMesh);
 
-  const cushionGeo = new THREE.BoxGeometry(2.85, 0.42, 2.05);
-  const cushionMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.9 });
-  const cushionMesh = new THREE.Mesh(cushionGeo, cushionMat);
-  cushionMesh.position.y = 0.2;
-  group.add(cushionMesh);
+  const baseCubeGeo = new THREE.BoxGeometry(2.7, 1.2, 2.1);
+  const baseCubeMesh = new THREE.Mesh(baseCubeGeo, bodyMat);
+  baseCubeMesh.position.y = 0.0;
+  baseCubeMesh.name = "BoxBaseCube";
+  baseGroup.add(baseCubeMesh);
 
-  // LIFT-OFF LID
+  const velvetGeo = new THREE.BoxGeometry(2.55, 0.35, 1.95);
+  const velvetMat = new THREE.MeshStandardMaterial({ color: 0x080a0f, roughness: 0.96 });
+  const velvetMesh = new THREE.Mesh(velvetGeo, velvetMat);
+  velvetMesh.position.y = 0.45;
+  velvetMesh.name = "VelvetCushion";
+  baseGroup.add(velvetMesh);
+
+  group.add(baseGroup);
+
+  // HINGED OPEN LID
   const lidGroup = new THREE.Group();
   lidGroup.name = "LidGroup";
+  lidGroup.position.set(0, 0.6, -1.05);
+  lidGroup.rotation.x = Math.PI * 0.6;
 
-  const lidTopGeo = new THREE.BoxGeometry(3.04, 0.08, 2.24);
-  const lidTopMesh = new THREE.Mesh(lidTopGeo, baseMat);
-  lidTopMesh.position.set(0, 0.44, 0.0);
-  lidTopMesh.name = "LidShell";
-  lidGroup.add(lidTopMesh);
+  const lidPanelGeo = new THREE.BoxGeometry(2.7, 1.8, 0.06);
+  const lidPanelMesh = new THREE.Mesh(lidPanelGeo, bodyMat);
+  lidPanelMesh.position.set(0, 0.9, 0.0);
+  lidPanelMesh.name = "LidShell";
+  lidGroup.add(lidPanelMesh);
 
-  const frontLipGeo = new THREE.BoxGeometry(3.04, 0.42, 0.08);
-  const frontLipMesh = new THREE.Mesh(frontLipGeo, baseMat);
-  frontLipMesh.position.set(0, 0.19, 1.08);
-  frontLipMesh.name = "FrontLip";
-  lidGroup.add(frontLipMesh);
-
-  const logoGeo = new THREE.PlaneGeometry(1.6, 0.65);
-  const logoMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.95, roughness: 0.15, side: THREE.DoubleSide });
+  const logoGeo = new THREE.PlaneGeometry(1.5, 0.65);
+  const logoMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.95, roughness: 0.15, side: THREE.DoubleSide });
   const logoMesh = new THREE.Mesh(logoGeo, logoMat);
-  logoMesh.rotation.x = -Math.PI / 2;
-  logoMesh.position.set(0, 0.485, 0.0);
+  logoMesh.position.set(0, 0.95, 0.035);
   logoMesh.name = "AlfaGoldLogo";
   lidGroup.add(logoMesh);
-
-  lidGroup.add(createHumanHand());
 
   group.add(lidGroup);
   return group;
 }
 
-// 3. ALFA GOLD BOX ROYAL
+// 3. ALFA GOLD BOX ROYAL (Solid Cuboid Box)
 function createAlfaGoldRoyalBox() {
   const group = new THREE.Group();
   group.name = "AlfaGoldRoyalBox";
 
-  const baseGeo = new THREE.BoxGeometry(2.6, 0.8, 2.4);
-  const baseMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.3, metalness: 0.5 });
-  const baseMesh = new THREE.Mesh(baseGeo, baseMat);
-  baseMesh.position.y = -0.4;
-  group.add(baseMesh);
+  const bodyMat = new THREE.MeshStandardMaterial({ color: 0x451a03, roughness: 0.35, metalness: 0.4 });
 
-  const goldCollarGeo = new THREE.BoxGeometry(2.53, 0.5, 2.33);
-  const goldCollarMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.95, roughness: 0.15 });
-  const goldCollarMesh = new THREE.Mesh(goldCollarGeo, goldCollarMat);
-  goldCollarMesh.position.y = 0.18;
-  group.add(goldCollarMesh);
+  const baseGroup = new THREE.Group();
+  const baseFlapGeo = new THREE.BoxGeometry(2.5, 0.06, 2.5);
+  const baseFlapMesh = new THREE.Mesh(baseFlapGeo, bodyMat);
+  baseFlapMesh.position.y = -0.63;
+  baseFlapMesh.name = "BoxBaseOuter";
+  baseGroup.add(baseFlapMesh);
 
-  // LIFT-OFF LID
+  const baseCubeGeo = new THREE.BoxGeometry(2.4, 1.2, 2.4);
+  const baseCubeMesh = new THREE.Mesh(baseCubeGeo, bodyMat);
+  baseCubeMesh.position.y = 0.0;
+  baseCubeMesh.name = "BoxBaseCube";
+  baseGroup.add(baseCubeMesh);
+
+  const velvetGeo = new THREE.BoxGeometry(2.25, 0.35, 2.25);
+  const velvetMat = new THREE.MeshStandardMaterial({ color: 0x05080c, roughness: 0.96 });
+  const velvetMesh = new THREE.Mesh(velvetGeo, velvetMat);
+  velvetMesh.position.y = 0.45;
+  velvetMesh.name = "VelvetCushion";
+  baseGroup.add(velvetMesh);
+
+  group.add(baseGroup);
+
+  // HINGED OPEN LID
   const lidGroup = new THREE.Group();
   lidGroup.name = "LidGroup";
+  lidGroup.position.set(0, 0.6, -1.2);
+  lidGroup.rotation.x = Math.PI * 0.6;
 
-  const lidTopGeo = new THREE.BoxGeometry(2.64, 0.08, 2.44);
-  const lidTopMesh = new THREE.Mesh(lidTopGeo, baseMat);
-  lidTopMesh.position.set(0, 0.44, 0.0);
-  lidTopMesh.name = "LidShell";
-  lidGroup.add(lidTopMesh);
+  const lidPanelGeo = new THREE.BoxGeometry(2.4, 1.8, 0.06);
+  const lidPanelMesh = new THREE.Mesh(lidPanelGeo, bodyMat);
+  lidPanelMesh.position.set(0, 0.9, 0.0);
+  lidPanelMesh.name = "LidShell";
+  lidGroup.add(lidPanelMesh);
 
-  const frontLipGeo = new THREE.BoxGeometry(2.64, 0.42, 0.08);
-  const frontLipMesh = new THREE.Mesh(frontLipGeo, baseMat);
-  frontLipMesh.position.set(0, 0.19, 1.18);
-  frontLipMesh.name = "FrontLip";
-  lidGroup.add(frontLipMesh);
-
-  const logoGeo = new THREE.PlaneGeometry(1.5, 0.65);
-  const logoMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.95, roughness: 0.15, side: THREE.DoubleSide });
+  const logoGeo = new THREE.PlaneGeometry(1.4, 0.65);
+  const logoMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.95, roughness: 0.15, side: THREE.DoubleSide });
   const logoMesh = new THREE.Mesh(logoGeo, logoMat);
-  logoMesh.rotation.x = -Math.PI / 2;
-  logoMesh.position.set(0, 0.485, 0.0);
+  logoMesh.position.set(0, 0.95, 0.035);
   logoMesh.name = "AlfaGoldLogo";
   lidGroup.add(logoMesh);
-
-  lidGroup.add(createHumanHand());
 
   group.add(lidGroup);
   return group;
 }
 
 function main() {
-  console.log("Generating ALFA GOLD BOX 3D GLB Assets with Human Hand Unboxing Physics...");
+  console.log("Generating ALFA GOLD BOX 3D GLB Assets matching image.png reference...");
   exportGroupToGLBFile(createAlfaGoldClassicBox(), "alfa_gold_box_classic.glb");
   exportGroupToGLBFile(createAlfaGoldDeluxeBox(), "alfa_gold_box_deluxe.glb");
   exportGroupToGLBFile(createAlfaGoldRoyalBox(), "alfa_gold_box_royal.glb");
-  console.log("Successfully generated Lift-Off hand unboxing GLB models!");
+  console.log("Successfully generated open GLB box models!");
 }
 
 main();

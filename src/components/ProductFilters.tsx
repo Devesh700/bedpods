@@ -7,8 +7,6 @@ interface ProductFiltersProps {
   onSelectProduct: (product: ProductDetailItem) => void;
   selectedColor: ColorOption;
   onSelectColor: (color: ColorOption) => void;
-  isBoxOpen: boolean;
-  onToggleBox: () => void;
 }
 
 export const ProductFilters: React.FC<ProductFiltersProps> = ({
