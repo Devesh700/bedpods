@@ -38,16 +38,32 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const controlsRef = useRef<OrbitControls | null>(null);
 
-  // Group & Hinge References
+  // Group References
   const boxGroupRef = useRef<THREE.Group | null>(null);
-  const lidHingeGroupRef = useRef<THREE.Group | null>(null);
+  const lidGroupRef = useRef<THREE.Group | null>(null);
 
   // Dynamic Material References for Color Switcher
   const bodyMaterialsRef = useRef<THREE.MeshPhysicalMaterial[]>([]);
 
-  // Animation Target Angles
-  const targetLidAngle = useRef<number>(0);
-  const currentLidAngle = useRef<number>(0);
+  // Animation Target Positions and Rotations (Human Hand Lift-off Movement)
+  const currentLidY = useRef<number>(0);
+  const targetLidY = useRef<number>(0);
+
+  const currentLidX = useRef<number>(0);
+  const targetLidX = useRef<number>(0);
+
+  const currentLidZ = useRef<number>(0);
+  const targetLidZ = useRef<number>(0);
+
+  const currentLidRotX = useRef<number>(0);
+  const targetLidRotX = useRef<number>(0);
+
+  const currentLidRotY = useRef<number>(0);
+  const targetLidRotY = useRef<number>(0);
+
+  // Drag Gesture tracking
+  const isDragging = useRef<boolean>(false);
+  const startY = useRef<number>(0);
 
   // Initialize Three.js WebGL Scene with Clean Studio Light Theme
   useEffect(() => {
@@ -62,12 +78,12 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
     scene.fog = new THREE.FogExp2("#F8F9FA", 0.04);
     sceneRef.current = scene;
 
-    // 2. Camera
-    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
-    camera.position.set(0, 1.4, 4.6);
+    // 2. Camera angled to match video screenshot perspective
+    const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
+    camera.position.set(0, 1.8, 4.4);
     cameraRef.current = camera;
 
-    // 3. WebGL Renderer with updated PCFShadowMap
+    // 3. WebGL Renderer with PCFShadowMap
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
       antialias: true,
@@ -77,12 +93,12 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFShadowMap; // Updated PCFShadowMap for Three.js v0.170+
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
+    renderer.toneMappingExposure = 1.18;
     rendererRef.current = renderer;
 
-    // 4. Smooth Orbit Controls (Full 360 Damping, Unblocked Rotation)
+    // 4. Smooth Orbit Controls
     const controls = new OrbitControls(camera, canvasRef.current);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
@@ -92,13 +108,13 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
     controls.maxDistance = 7.5;
     controls.minPolarAngle = 0.01;
     controls.maxPolarAngle = Math.PI - 0.01;
-    controls.target.set(0, 0.1, 0);
+    controls.target.set(0, 0.05, 0);
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 1.2;
+    controls.autoRotateSpeed = 1.0;
     controlsRef.current = controls;
 
     // 5. Studio Lighting Setup for Gold & Velvet Reflections
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.3);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
     scene.add(ambientLight);
 
     const mainLight = new THREE.DirectionalLight(0xffffff, 1.8);
@@ -113,7 +129,7 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
     fillLight.position.set(-4, 3, -3);
     scene.add(fillLight);
 
-    const goldAccentLight = new THREE.PointLight(0xf59e0b, 1.5, 10);
+    const goldAccentLight = new THREE.PointLight(0xf59e0b, 1.6, 10);
     goldAccentLight.position.set(0, 3, 2);
     scene.add(goldAccentLight);
 
@@ -122,7 +138,7 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
     const shadowDiscMat = new THREE.ShadowMaterial({ opacity: 0.15 });
     const shadowDiscMesh = new THREE.Mesh(shadowDiscGeo, shadowDiscMat);
     shadowDiscMesh.rotation.x = -Math.PI / 2;
-    shadowDiscMesh.position.y = -0.66;
+    shadowDiscMesh.position.y = -0.71;
     shadowDiscMesh.receiveShadow = true;
     scene.add(shadowDiscMesh);
 
@@ -151,10 +167,19 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
         controlsRef.current.update();
       }
 
-      // Smooth Box Lid Unboxing Animation Lerp
-      currentLidAngle.current += (targetLidAngle.current - currentLidAngle.current) * 0.08;
-      if (lidHingeGroupRef.current) {
-        lidHingeGroupRef.current.rotation.x = currentLidAngle.current;
+      // Smooth Human Hand Lifting Box Lid Animation Lerp
+      currentLidY.current += (targetLidY.current - currentLidY.current) * 0.08;
+      currentLidX.current += (targetLidX.current - currentLidX.current) * 0.08;
+      currentLidZ.current += (targetLidZ.current - currentLidZ.current) * 0.08;
+      currentLidRotX.current += (targetLidRotX.current - currentLidRotX.current) * 0.08;
+      currentLidRotY.current += (targetLidRotY.current - currentLidRotY.current) * 0.08;
+
+      if (lidGroupRef.current) {
+        lidGroupRef.current.position.y = currentLidY.current;
+        lidGroupRef.current.position.x = currentLidX.current;
+        lidGroupRef.current.position.z = currentLidZ.current;
+        lidGroupRef.current.rotation.x = currentLidRotX.current;
+        lidGroupRef.current.rotation.y = currentLidRotY.current;
       }
 
       renderer.render(scene, camera);
@@ -182,9 +207,9 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
       loadedBox.position.set(0, -0.2, 0);
       boxGroupRef.current = loadedBox as THREE.Group;
 
-      const hingeGroup = loadedBox.getObjectByName("LidHingeGroup");
-      if (hingeGroup) {
-        lidHingeGroupRef.current = hingeGroup as THREE.Group;
+      const lidGroup = loadedBox.getObjectByName("LidGroup") || loadedBox.getObjectByName("LidHingeGroup");
+      if (lidGroup) {
+        lidGroupRef.current = lidGroup as THREE.Group;
       }
 
       loadedBox.traverse((child) => {
@@ -195,6 +220,10 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
           if (
             child.name.includes("BoxBaseOuter") ||
             child.name.includes("LidShell") ||
+            child.name.includes("FrontLip") ||
+            child.name.includes("BackLip") ||
+            child.name.includes("LeftLip") ||
+            child.name.includes("RightLip") ||
             child.name.includes("Outer")
           ) {
             const mat = new THREE.MeshPhysicalMaterial({
@@ -220,12 +249,10 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
         attachBoxToScene(gltf.scene);
       },
       undefined,
-      async (error) => {
-        // Fallback loader for wrapped buffer assets
+      async () => {
         try {
           const res = await fetch(glbUrl);
           const buf = await res.arrayBuffer();
-          // Extract JSON chunk from GLB payload
           const jsonChunkLength = new DataView(buf, 12, 4).getUint32(0, true);
           const jsonText = new TextDecoder().decode(new Uint8Array(buf, 20, jsonChunkLength));
           const parsedObject = JSON.parse(jsonText);
@@ -251,22 +278,62 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
     });
   }, [selectedColor]);
 
-  // Synchronize Box Opening/Closing Animation Target Angles
+  // Synchronize Box Opening/Closing Animation Target Positions (Human Hand Lift-Off Action)
   useEffect(() => {
     if (isBoxOpen) {
-      targetLidAngle.current = -Math.PI * 0.65; // Flip open lid ~117 deg as in reference image
+      // OPEN: Human Hand lifts top lid UPWARDS, tilts backward, and shifts back slightly
+      targetLidY.current = 1.35;
+      targetLidX.current = 0.25;
+      targetLidZ.current = -0.35;
+      targetLidRotX.current = -Math.PI * 0.25;
+      targetLidRotY.current = 0.15;
     } else {
-      targetLidAngle.current = 0; // Lid closes flat
+      // CLOSED: Human Hand places lid back down onto box collar
+      targetLidY.current = 0.0;
+      targetLidX.current = 0.0;
+      targetLidZ.current = 0.0;
+      targetLidRotX.current = 0.0;
+      targetLidRotY.current = 0.0;
     }
   }, [isBoxOpen]);
+
+  // Drag Gesture Hand Opening Handlers
+  const handlePointerDown = (e: React.PointerEvent) => {
+    isDragging.current = true;
+    startY.current = e.clientY;
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging.current) return;
+    const diffY = startY.current - e.clientY; // Dragging UP yields positive diffY
+    if (diffY > 40 && !isBoxOpen) {
+      onToggleBox();
+      isDragging.current = false;
+    } else if (diffY < -40 && isBoxOpen) {
+      onToggleBox();
+      isDragging.current = false;
+    }
+  };
+
+  const handlePointerUp = () => {
+    isDragging.current = false;
+  };
 
   return (
     <div
       ref={containerRef}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
       className="relative w-full h-[500px] md:h-[600px] bg-gradient-to-b from-secondary via-pure-white to-secondary rounded-3xl overflow-hidden shadow-strong border border-granite/10 cursor-grab active:cursor-grabbing select-none"
     >
-      {/* 3D WebGL Canvas Rendering ALFA GOLD BOX GLB Model */}
+      {/* 3D WebGL Canvas Rendering ALFA GOLD BOX GLB Model with Human Hand */}
       <canvas ref={canvasRef} className="w-full h-full block" />
+
+      {/* Subtle Drag Indicator Hint */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 bg-pure-white/80 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-medium text-granite shadow-sm border border-granite/10 pointer-events-none">
+        👋 Drag up with hand or tap button below to open
+      </div>
 
       {/* SINGLE CLEAN UNBOXING TOGGLE BUTTON INSIDE 3D CANVAS */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto">
