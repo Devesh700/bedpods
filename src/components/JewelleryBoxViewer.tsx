@@ -164,7 +164,7 @@ const ProductModel: React.FC<ProductModelProps> = ({
       object={scene}
       position={[0, -0.25, 0]}
       scale={[1.1, 1.1, 1.1]}
-      onClick={(e: THREE.Event) => {
+      onClick={(e: any) => {
         e.stopPropagation();
         onTriggerToggle();
       }}

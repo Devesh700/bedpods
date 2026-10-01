@@ -52,7 +52,7 @@ const PurchaseModal = ({ isOpen, onClose, productName, price, originalPrice }: P
       console.log("Document written with data: ", docRef);
 
       // Show success message
-      toast.success("🎉 Congratulations! Welcome to BEPODS Family!", {
+      toast.success("🎉 Congratulations! Welcome to alfa gold Family!", {
         description: "Your order has been placed successfully. We'll contact you soon!",
         duration: 5000,
       });

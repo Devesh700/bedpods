@@ -7,9 +7,9 @@ interface WhatsAppButtonProps {
   showText?: boolean;
 }
 
-const WhatsAppButton = ({ 
-  phoneNumber = "+918288080954", 
-  message = "Hi! I'm interested in ordering BEPODS products.",
+const WhatsAppButton = ({
+  phoneNumber = "+918288080954",
+  message = "Hi! I'm interested in ordering alfa gold products.",
   className = "",
   showText = true
 }: WhatsAppButtonProps) => {

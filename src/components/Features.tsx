@@ -37,16 +37,16 @@ const Features = () => {
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-pure-black mb-4">
-            Why Choose BEPODS?
+            Why Choose alfa gold?
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Premium Apple products at unbeatable prices with exceptional service
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <div 
+            <div
               key={index}
               className="group p-6 bg-pure-white rounded-xl shadow-soft hover:shadow-medium transition-all duration-300 transform hover:-translate-y-1"
             >
