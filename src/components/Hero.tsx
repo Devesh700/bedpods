@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import heroImg from "@/assets/hero-bg.jpg";
+import heroImg from "@/assets/image.png";
 import PurchaseModal from "./PurchaseModal";
 import WhatsAppButton from "./WhatsAppButton";
 import { FaShippingFast, FaShieldAlt, FaMedal } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   const [showModal, setShowModal] = useState(false);
@@ -15,129 +16,120 @@ const Hero = () => {
         y: (e.clientY / window.innerHeight) * 20 - 10,
       });
     };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   return (
     <>
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Animated Background with Parallax */}
-        <div 
+        <div
           className="absolute inset-0 z-0 transition-transform duration-300 ease-out"
           style={{
             backgroundImage: `url(${heroImg})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'brightness(0.3)',
-            transform: `translate(${mousePosition.x}px, ${mousePosition.y}px) scale(1.1)`
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            filter: "brightness(0.25)",
+            transform: `translate(${mousePosition.x}px, ${mousePosition.y}px) scale(1.1)`,
           }}
         />
-        
-        {/* Animated Gradient Overlay */}
+
+        {/* Gradient Overlay */}
         <div className="absolute inset-0 z-[1]">
-          <div className="absolute inset-0 bg-gradient-to-br from-pure-black/80 via-transparent to-pure-black/80 animate-pulse" />
+          <div className="absolute inset-0 bg-gradient-to-br from-pure-black/90 via-transparent to-pure-black/90" />
           <div className="absolute inset-0 bg-gradient-to-t from-pure-black via-transparent to-transparent" />
         </div>
 
-        {/* Floating Particles Animation */}
+        {/* Floating Gold Particles */}
         <div className="absolute inset-0 z-[2]">
           {[...Array(20)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-1 h-1 bg-pure-white/30 rounded-full animate-pulse"
+              className="absolute w-1 h-1 bg-amber-400/40 rounded-full animate-pulse"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
                 animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${3 + Math.random() * 4}s`
+                animationDuration: `${3 + Math.random() * 4}s`,
               }}
             />
           ))}
         </div>
-        
-        <div className="relative z-10 container mx-auto px-6 text-center pt-20 pb-10">
-          {/* Animated Logo Text with Glow Effect */}
+
+        <div className="relative z-10 container mx-auto px-6 text-center pt-24 pb-12">
+          {/* Animated Logo Text */}
           <div className="relative inline-block mb-6">
-            <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold text-pure-white animate-fade-in relative">
-              <span className="absolute inset-0 blur-3xl text-pure-white/50 animate-pulse">BEPODS</span>
-              <span className="relative">BEPODS</span>
+            <h1 className="text-4xl md:text-7xl lg:text-8xl font-black text-pure-white tracking-tight animate-fade-in relative">
+              <span className="relative text-amber-400">ALFA GOLD BOX</span>
             </h1>
-            <div className="absolute -inset-4 bg-gradient-to-r from-pure-white/20 to-transparent blur-3xl animate-pulse" />
+            <p className="text-xs uppercase tracking-[0.3em] text-amber-300/80 font-semibold mt-2">
+              Luxury Jewellery Packaging & Storage Vaults
+            </p>
           </div>
 
-          {/* Animated Tagline */}
-          <p className="text-xl md:text-3xl text-pure-white/90 mb-8 animate-fade-in animation-delay-200 font-light tracking-wide">
-            <span className="inline-block animate-pulse">Feel</span>{" "}
-            <span className="inline-block animate-pulse animation-delay-200">Music</span>{" "}
-            <span className="inline-block animate-pulse animation-delay-400">with</span>{" "}
-            <span className="inline-block font-bold bg-gradient-to-r from-pure-white to-pure-white/60 bg-clip-text text-transparent">
-              BEPODS
-            </span>
+          {/* Tagline */}
+          <p className="text-lg md:text-2xl text-pure-white/90 mb-8 max-w-2xl mx-auto font-light tracking-wide">
+            Elevate Your Gold, Diamonds & Gemstones with the World's Finest Magnetic Flip-Top Jewellery Boxes
           </p>
 
           {/* WhatsApp Contact */}
-          <div className="flex justify-center mb-8 animate-fade-in animation-delay-300">
-            <WhatsAppButton message="Hi! I want to order BEPODS products." />
-          </div>
-          
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in animation-delay-400">
-            <button 
-              onClick={() => setShowModal(true)}
-              className="group relative px-8 py-4 bg-pure-white text-pure-black font-semibold rounded-lg overflow-hidden transition-all transform hover:scale-105 shadow-glow"
-            >
-              <span className="relative z-10">Shop Now</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-pure-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-            </button>
-            <a 
-              href="#products" 
-              className="group relative px-8 py-4 border-2 border-pure-white text-pure-white font-semibold rounded-lg overflow-hidden transition-all transform hover:scale-105"
-            >
-              <span className="relative z-10">View Products</span>
-              <div className="absolute inset-0 bg-pure-white/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-            </a>
-          </div>
-          
-          {/* Feature Icons with Animation */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto animate-fade-in animation-delay-600">
-            <div className="group text-center transform hover:scale-110 transition-all duration-300">
-              <div className="flex justify-center mb-3">
-                <div className="p-4 bg-pure-white/10 rounded-full backdrop-blur-sm group-hover:bg-pure-white/20 transition-all">
-                  <FaMedal className="text-3xl text-pure-white" />
-                </div>
-              </div>
-              <p className="text-3xl font-bold text-pure-white">Premium</p>
-              <p className="text-pure-white/60">Quality</p>
-            </div>
-            <div className="group text-center transform hover:scale-110 transition-all duration-300">
-              <div className="flex justify-center mb-3">
-                <div className="p-4 bg-pure-white/10 rounded-full backdrop-blur-sm group-hover:bg-pure-white/20 transition-all">
-                  <FaShieldAlt className="text-3xl text-pure-white" />
-                </div>
-              </div>
-              <p className="text-3xl font-bold text-pure-white">6 Months</p>
-              <p className="text-pure-white/60">Warranty</p>
-            </div>
-            <div className="group text-center transform hover:scale-110 transition-all duration-300">
-              <div className="flex justify-center mb-3">
-                <div className="p-4 bg-pure-white/10 rounded-full backdrop-blur-sm group-hover:bg-pure-white/20 transition-all">
-                  <FaShippingFast className="text-3xl text-pure-white" />
-                </div>
-              </div>
-              <p className="text-3xl font-bold text-pure-white">Free</p>
-              <p className="text-pure-white/60">Shipping</p>
-            </div>
+          <div className="flex justify-center mb-8">
+            <WhatsAppButton message="Hi! I want to order ALFA GOLD BOX luxury jewellery boxes." />
           </div>
 
-          {/* WhatsApp Contact Info */}
-          <div className="mt-12 text-pure-white/80 animate-fade-in animation-delay-800">
-            <p className="text-lg">Quick Order via WhatsApp</p>
-            <p className="text-2xl font-bold mt-2">+91 6306201043</p>
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/product/alfa-gold-classic"
+              className="px-8 py-4 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-sm rounded-xl transition-all shadow-xl shadow-amber-400/20 transform hover:scale-105"
+            >
+              ✨ Experience 3D Box Unboxing
+            </Link>
+
+            <a
+              href="#products"
+              className="px-8 py-4 border border-pure-white/40 text-pure-white hover:bg-pure-white/10 font-bold text-sm rounded-xl transition-all"
+            >
+              Explore Collection
+            </a>
+          </div>
+
+          {/* Feature Badges */}
+          <div className="mt-16 grid grid-cols-3 gap-6 max-w-2xl mx-auto">
+            <div className="text-center">
+              <div className="flex justify-center mb-2">
+                <div className="p-3 bg-pure-white/10 rounded-full backdrop-blur-sm">
+                  <FaMedal className="text-2xl text-amber-400" />
+                </div>
+              </div>
+              <p className="text-xl font-bold text-pure-white">24K Gold</p>
+              <p className="text-xs text-pure-white/60">Foil Stamp</p>
+            </div>
+
+            <div className="text-center">
+              <div className="flex justify-center mb-2">
+                <div className="p-3 bg-pure-white/10 rounded-full backdrop-blur-sm">
+                  <FaShieldAlt className="text-2xl text-amber-400" />
+                </div>
+              </div>
+              <p className="text-xl font-bold text-pure-white">Velvet</p>
+              <p className="text-xs text-pure-white/60">Protection</p>
+            </div>
+
+            <div className="text-center">
+              <div className="flex justify-center mb-2">
+                <div className="p-3 bg-pure-white/10 rounded-full backdrop-blur-sm">
+                  <FaShippingFast className="text-2xl text-amber-400" />
+                </div>
+              </div>
+              <p className="text-xl font-bold text-pure-white">Express</p>
+              <p className="text-xs text-pure-white/60">Free Delivery</p>
+            </div>
           </div>
         </div>
       </section>
-      
+
       <PurchaseModal isOpen={showModal} onClose={() => setShowModal(false)} />
     </>
   );
