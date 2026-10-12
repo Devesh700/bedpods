@@ -12,17 +12,17 @@ const Header = () => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-8">
-            <Link
-              to="/"
-              className="text-amber-400 font-semibold hover:text-amber-300 transition-colors flex items-center gap-1.5 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/30 text-xs"
-            >
-              <span>✨ Mall 3D Showcase</span>
-            </Link>
-            <Link to="/store" className="text-pure-white hover:text-amber-400 transition-colors text-sm font-medium">
-              Storefront
+            <Link to="/" className="text-pure-white hover:text-amber-400 transition-colors text-sm font-medium">
+              Home
             </Link>
             <Link to="/products" className="text-pure-white hover:text-amber-400 transition-colors text-sm font-medium">
               Jewellery Boxes
+            </Link>
+            <Link
+              to="/product/alfa-gold-classic"
+              className="text-amber-400 font-semibold hover:text-amber-300 transition-colors flex items-center gap-1.5 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/30 text-xs"
+            >
+              <span>✨ 3D Unboxing Experience</span>
             </Link>
             <Link to="/about" className="text-pure-white hover:text-amber-400 transition-colors text-sm font-medium">
               About

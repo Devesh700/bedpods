@@ -81,10 +81,10 @@ const Hero = () => {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/"
-              className="px-8 py-4 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-sm rounded-xl transition-all shadow-xl shadow-amber-400/20 transform hover:scale-105 flex items-center justify-center gap-2"
+              to="/product/alfa-gold-classic"
+              className="px-8 py-4 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-sm rounded-xl transition-all shadow-xl shadow-amber-400/20 transform hover:scale-105"
             >
-              <span>✨ Launch Mall 3D Showcase Kiosk</span>
+              ✨ Experience 3D Box Unboxing
             </Link>
 
             <a
