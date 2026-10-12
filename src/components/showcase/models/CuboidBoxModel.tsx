@@ -78,8 +78,6 @@ export const CuboidBoxModel: React.FC<CuboidBoxModelProps> = ({
   }, [surfaceFinish]);
 
   const boxColor = new THREE.Color(colorHex);
-  // Interior paper: subtle elegant tint matching exterior
-  const interiorColor = new THREE.Color(colorHex).offsetHSL(0, -0.05, 0.08);
 
   // Smooth animation for lid separation and placement beside box
   useFrame((_, delta) => {
@@ -125,7 +123,7 @@ export const CuboidBoxModel: React.FC<CuboidBoxModelProps> = ({
   });
 
   return (
-    <group position={[isLidRemoved ? -w * 0.25 : 0, 0, 0]}>
+    <group position={[isLidRemoved ? -w * 0.25 : 0, -h / 2, 0]}>
       {/* ============================================================== */}
       {/* 1. HOLLOW BOX BASE (Nothing inside, pure hollow interior)       */}
       {/* ============================================================== */}
@@ -138,28 +136,6 @@ export const CuboidBoxModel: React.FC<CuboidBoxModelProps> = ({
             {...materialProps}
           />
         </mesh>
-
-        {/* Interior bottom floor liner */}
-        <mesh position={[0, t + 0.001, 0]} receiveShadow>
-          <planeGeometry args={[w - 2 * t - 0.002, d - 2 * t - 0.002]} />
-          <meshPhysicalMaterial
-            color={interiorColor}
-            roughness={0.65}
-            metalness={0.05}
-          />
-        </mesh>
-
-        {/* Inner subtle branded stamp on bottom floor */}
-        {goldEmbossing && (
-          <mesh position={[0, t + 0.003, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <circleGeometry args={[Math.min(w, d) * 0.15, 32]} />
-            <meshStandardMaterial
-              color="#d4af37"
-              metalness={0.9}
-              roughness={0.2}
-            />
-          </mesh>
-        )}
 
         {/* Front wall */}
         <mesh
@@ -199,17 +175,6 @@ export const CuboidBoxModel: React.FC<CuboidBoxModelProps> = ({
         >
           <boxGeometry args={[t, h - t, d - 2 * t]} />
           <meshPhysicalMaterial color={boxColor} {...materialProps} />
-        </mesh>
-
-        {/* Top Rim Edges Highlight for luxury paper wrapped look */}
-        <mesh position={[0, h, 0]}>
-          <boxGeometry args={[w + 0.002, 0.004, d + 0.002]} />
-          <meshStandardMaterial
-            color="#d4af37"
-            metalness={0.6}
-            roughness={0.3}
-            wireframe
-          />
         </mesh>
       </group>
 

@@ -45,11 +45,11 @@ export const ShowcaseSidebar: React.FC<ShowcaseSidebarProps> = ({
   };
 
   return (
-    <aside className="w-full lg:w-[400px] xl:w-[440px] h-full flex flex-col bg-[#0d0f14] border-r border-white/10 text-pure-white overflow-y-auto select-none custom-scrollbar">
+    <aside className="w-full h-full flex flex-col bg-[#0d0f14] border-r border-white/10 text-pure-white overflow-y-auto select-none custom-scrollbar">
       {/* ============================================================== */}
       {/* 1. HEADER / MALL SHOWCASE BRANDING                              */}
       {/* ============================================================== */}
-      <div className="p-6 border-b border-white/10 bg-gradient-to-b from-[#141822] to-[#0d0f14]">
+      <div className="p-4 sm:p-5 border-b border-white/10 bg-gradient-to-b from-[#141822] to-[#0d0f14]">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[11px] font-mono tracking-widest text-amber-400 font-bold uppercase">
             MALL SHOWCASE
@@ -58,7 +58,7 @@ export const ShowcaseSidebar: React.FC<ShowcaseSidebarProps> = ({
             3D Configurator
           </span>
         </div>
-        <h1 className="text-2xl font-black text-pure-white tracking-tight">
+        <h1 className="text-xl sm:text-2xl font-black text-pure-white tracking-tight">
           ALFA GOLD LUXE
         </h1>
         <p className="text-xs text-pure-white/60 mt-1">
@@ -66,7 +66,7 @@ export const ShowcaseSidebar: React.FC<ShowcaseSidebarProps> = ({
         </p>
       </div>
 
-      <div className="p-6 space-y-7 flex-1">
+      <div className="p-4 sm:p-5 space-y-6 flex-1">
         {/* ============================================================== */}
         {/* 2. ATTRIBUTE 1: BOX TYPE SELECTOR (ONLY CUBOID SHOWN)          */}
         {/* ============================================================== */}

@@ -32,18 +32,22 @@ export const MallShowcaseViewer: React.FC<MallShowcaseViewerProps> = ({
   const currentColorHex = state.selectedColor ? state.selectedColor.hex : state.customHex;
 
   // Camera presets
-  const handleSetCameraView = (type: "front" | "top" | "iso") => {
+  // Camera presets centered on the box
+  const handleSetCameraView = (type: "front" | "top" | "bottom" | "iso") => {
     if (!controlsRef.current) return;
     const controls = controlsRef.current;
     if (type === "front") {
-      controls.object.position.set(0, 0.4, 2.3);
-      controls.target.set(0, 0.4, 0);
+      controls.object.position.set(0, 0, 2.2);
+      controls.target.set(0, 0, 0);
     } else if (type === "top") {
-      controls.object.position.set(0, 2.6, 0.01);
-      controls.target.set(0, 0.2, 0);
+      controls.object.position.set(0, 2.4, 0.001);
+      controls.target.set(0, 0, 0);
+    } else if (type === "bottom") {
+      controls.object.position.set(0, -2.4, 0.001);
+      controls.target.set(0, 0, 0);
     } else if (type === "iso") {
-      controls.object.position.set(1.6, 1.4, 2.0);
-      controls.target.set(0, 0.3, 0);
+      controls.object.position.set(1.5, 1.2, 1.8);
+      controls.target.set(0, 0, 0);
     }
     controls.update();
   };
@@ -60,48 +64,55 @@ export const MallShowcaseViewer: React.FC<MallShowcaseViewerProps> = ({
       {/* ============================================================== */}
       {/* TOP FLOATING MALL KIOSK HUD BAR                                */}
       {/* ============================================================== */}
-      <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
+      <div className="absolute top-3 left-3 right-3 z-20 flex items-center justify-between gap-2 pointer-events-none">
         {/* Left: 360° Showcase Badge (Clean, without ping icons) */}
-        <div className="pointer-events-auto flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pure-black/80 backdrop-blur-md border border-amber-400/30 text-pure-white shadow-xl">
-          <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-          <span className="text-xs font-bold tracking-wide uppercase text-amber-300">
+        <div className="pointer-events-auto flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-pure-black/85 backdrop-blur-md border border-amber-400/30 text-pure-white shadow-xl">
+          <span className="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0"></span>
+          <span className="text-[11px] sm:text-xs font-bold tracking-wide uppercase text-amber-300 whitespace-nowrap">
             360° View
           </span>
-          <span className="text-pure-white/30 text-xs">|</span>
-          <span className="text-[11px] text-pure-white/70 font-medium">
-            Drag to Rotate
+          <span className="text-pure-white/30 text-xs hidden sm:inline">|</span>
+          <span className="text-[11px] text-pure-white/70 font-medium hidden sm:inline whitespace-nowrap">
+            All Angles
           </span>
         </div>
 
         {/* Right HUD Controls: Camera Views, Lights, Auto-Rotate, Fullscreen */}
-        <div className="pointer-events-auto flex items-center gap-2">
+        <div className="pointer-events-auto flex items-center gap-1.5 sm:gap-2">
           {/* Quick Camera Views */}
-          <div className="hidden sm:flex items-center bg-pure-black/80 backdrop-blur-md border border-white/10 rounded-full p-1 shadow-xl">
+          <div className="flex items-center bg-pure-black/85 backdrop-blur-md border border-white/10 rounded-full p-0.5 sm:p-1 shadow-xl">
             <button
               onClick={() => handleSetCameraView("iso")}
-              className="px-2.5 py-1 text-[11px] font-semibold text-pure-white/80 hover:text-amber-400 hover:bg-white/5 rounded-full transition-all"
+              className="px-2 sm:px-2.5 py-1 text-[10px] sm:text-[11px] font-semibold text-pure-white/80 hover:text-amber-400 hover:bg-white/5 rounded-full transition-all"
               title="Isometric 3D View"
             >
-              Perspective
+              3D
             </button>
             <button
               onClick={() => handleSetCameraView("front")}
-              className="px-2.5 py-1 text-[11px] font-semibold text-pure-white/80 hover:text-amber-400 hover:bg-white/5 rounded-full transition-all"
+              className="px-2 sm:px-2.5 py-1 text-[10px] sm:text-[11px] font-semibold text-pure-white/80 hover:text-amber-400 hover:bg-white/5 rounded-full transition-all"
               title="Front View"
             >
               Front
             </button>
             <button
               onClick={() => handleSetCameraView("top")}
-              className="px-2.5 py-1 text-[11px] font-semibold text-pure-white/80 hover:text-amber-400 hover:bg-white/5 rounded-full transition-all"
+              className="px-2 sm:px-2.5 py-1 text-[10px] sm:text-[11px] font-semibold text-pure-white/80 hover:text-amber-400 hover:bg-white/5 rounded-full transition-all"
               title="Top View"
             >
               Top
             </button>
+            <button
+              onClick={() => handleSetCameraView("bottom")}
+              className="px-2 sm:px-2.5 py-1 text-[10px] sm:text-[11px] font-semibold text-pure-white/80 hover:text-amber-400 hover:bg-white/5 rounded-full transition-all"
+              title="Bottom View"
+            >
+              Bottom
+            </button>
           </div>
 
           {/* Lighting Mode Selector */}
-          <div className="flex items-center bg-pure-black/80 backdrop-blur-md border border-white/10 rounded-full p-1 shadow-xl">
+          <div className="flex items-center bg-pure-black/85 backdrop-blur-md border border-white/10 rounded-full p-0.5 sm:p-1 shadow-xl">
             <button
               onClick={() =>
                 onChangeLighting(
@@ -112,33 +123,37 @@ export const MallShowcaseViewer: React.FC<MallShowcaseViewerProps> = ({
                     : "boutique"
                 )
               }
-              className="px-3 py-1 text-[11px] font-semibold text-pure-white/90 hover:text-amber-400 rounded-full transition-all"
+              className="px-2.5 sm:px-3 py-1 text-[10px] sm:text-[11px] font-semibold text-pure-white/90 hover:text-amber-400 rounded-full transition-all"
               title="Change Lighting"
             >
-              <span className="capitalize">{state.lightingPreset} Light</span>
+              <span className="capitalize">{state.lightingPreset}</span>
             </button>
           </div>
 
           {/* Auto-Rotate Turntable Toggle */}
           <button
             onClick={onToggleAutoRotate}
-            className={`p-2 rounded-full backdrop-blur-md border transition-all shadow-xl ${
+            className={`p-1.5 sm:p-2 rounded-full backdrop-blur-md border transition-all shadow-xl ${
               state.autoRotate
                 ? "bg-amber-500/20 text-amber-400 border-amber-400/50"
-                : "bg-pure-black/80 text-pure-white/80 border-white/10 hover:text-pure-white"
+                : "bg-pure-black/85 text-pure-white/80 border-white/10 hover:text-pure-white"
             }`}
             title="Toggle 360° Auto-Rotate"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
 
           {/* Mall Kiosk Fullscreen Mode */}
           <button
             onClick={onToggleFullscreen}
-            className="p-2 rounded-full bg-pure-black/80 backdrop-blur-md text-pure-white/80 hover:text-pure-white border border-white/10 transition-all shadow-xl"
+            className="p-1.5 sm:p-2 rounded-full bg-pure-black/85 backdrop-blur-md text-pure-white/80 hover:text-pure-white border border-white/10 transition-all shadow-xl"
             title={isFullscreen ? "Exit Fullscreen" : "Fullscreen Mode"}
           >
-            {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            {isFullscreen ? (
+              <Minimize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            ) : (
+              <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            )}
           </button>
         </div>
       </div>
@@ -207,32 +222,10 @@ export const MallShowcaseViewer: React.FC<MallShowcaseViewerProps> = ({
             </>
           )}
 
-          {/* Interactive Pedestal Showcase Disc */}
-          <mesh position={[0, -0.002, 0]} receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
-            <circleGeometry args={[2.2, 64]} />
-            <meshStandardMaterial
-              color="#0d0f14"
-              roughness={0.7}
-              metalness={0.3}
-            />
-          </mesh>
+          {/* Underneath Fill Light to illuminate bottom of box when viewing from below */}
+          <directionalLight position={[0, -5, 0]} intensity={0.9} />
 
-          {/* Outer Gold Pedestal Accent Ring */}
-          <mesh position={[0, 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[2.18, 2.2, 64]} />
-            <meshStandardMaterial color="#d4af37" metalness={0.95} roughness={0.15} />
-          </mesh>
-
-          {/* Realistic Soft Contact Shadow on Floor */}
-          <ContactShadows
-            position={[0, -0.005, 0]}
-            opacity={0.7}
-            scale={6}
-            blur={1.8}
-            far={1.6}
-          />
-
-          {/* 360° Orbit Controls */}
+          {/* Complete 360° All-Angle Free Orbit Controls (Unconstrained Rotation) */}
           <OrbitControls
             ref={controlsRef}
             autoRotate={state.autoRotate}
@@ -241,10 +234,8 @@ export const MallShowcaseViewer: React.FC<MallShowcaseViewerProps> = ({
             panSpeed={0.8}
             rotateSpeed={0.8}
             zoomSpeed={0.9}
-            minDistance={0.8}
+            minDistance={0.5}
             maxDistance={5.0}
-            maxPolarAngle={Math.PI / 2 - 0.02} // Prevent camera going below floor
-            minPolarAngle={0.05}
           />
 
           {/* 3D Cuboid Box Model with Separable Lid */}
