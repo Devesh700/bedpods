@@ -12,9 +12,7 @@ export default defineConfig(({ mode }) => ({
   assetsInclude: ["**/*.glb", "**/*.gltf"],
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
-  ].filter(Boolean),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
